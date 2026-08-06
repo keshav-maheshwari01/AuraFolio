@@ -1,0 +1,21 @@
+Keshav Maheshwari
+
+AI/ML Engineer
+
+Email: keshav@example.com
+Phone: +91 9876543210
+
+Skills:
+Python
+Java
+Machine Learning
+FastAPI
+
+Projects:
+Fake News Detection System
+Built an NLP-based fake news classifier using DeBERTa.
+
+Experience:
+AI Intern at ABC Company
+Jan 2025 - May 2025
+Worked on machine learning projects.

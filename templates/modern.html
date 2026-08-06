@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.full_name }} - Portfolio</title>
+    <!-- Tailwind CSS CDN for instant, professional modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+
+    <!-- Header / Hero Section -->
+    <header class="bg-white border-b border-slate-200 py-16 px-6 text-center shadow-sm">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">{{ data.full_name }}</h1>
+            <p class="text-xl font-medium text-blue-600 mb-4">{{ data.professional_title }}</p>
+            <p class="text-slate-600 text-lg">{{ data.bio }}</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12 space-y-12">
+
+        <!-- Skills Section -->
+        <section class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">🛠️ Technical Skills</h2>
+            <div class="flex flex-wrap gap-2">
+                {% for skill in data.skills %}
+                    <span class="bg-blue-50 text-blue-700 font-medium px-3 py-1 rounded-full text-sm border border-blue-100">
+                        {{ skill }}
+                    </span>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">💼 Work Experience</h2>
+            <div class="space-y-8">
+                {% for exp in data.experience %}
+                    <div class="border-l-4 border-blue-600 pl-4 py-1">
+                        <h3 class="text-xl font-bold text-slate-900">{{ exp.role }}</h3>
+                        <p class="text-md font-semibold text-blue-600 mb-1">{{ exp.company }} <span class="text-slate-400 font-normal">| {{ exp.duration }}</span></p>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1 mt-2">
+                            {% for highlight in exp.highlights %}
+                                <li>{{ highlight }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">🚀 Notable Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for project in data.projects %}
+                    <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">{{ project.name }}</h3>
+                            <p class="text-slate-600 text-sm mb-4">{{ project.description }}</p>
+                        </div>
+                        <div class="flex flex-wrap gap-1 mt-2">
+                            {% for tech in project.technologies %}
+                                <span class="bg-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-slate-400 text-sm border-t border-slate-200 bg-white">
+        <p>Built with ⚡ AuraFolio Studio</p>
+    </footer>
+
+</body>
+</html>
