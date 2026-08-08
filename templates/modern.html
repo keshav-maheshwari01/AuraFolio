@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ data.full_name }} - Portfolio</title>
-    <!-- Tailwind CSS CDN for instant, professional modern styling -->
+    <title>{{ data.full_name }} - Professional Portfolio</title>
+    <!-- Tailwind CSS CDN for instant modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed selection:bg-blue-600 selection:text-white">
+
+    <!-- Floating Action Toolbar for AuraFolio -->
+    <div class="bg-slate-900 text-white py-3 px-6 flex justify-between items-center shadow-md sticky top-0 z-50 border-b border-slate-800">
+        <span class="font-bold text-sm tracking-wider text-blue-400">✨ AuraFolio Preview Mode</span>
+        <div class="space-x-3 flex items-center">
+            <a href="/" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg transition border border-slate-700">
+                ← Back to Studio
+            </a>
+            <button onclick="window.print()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg transition border border-slate-700">
+                🖨️ Print / PDF
+            </button>
+            <!-- Secure Download Button tied to our RAM token cache -->
+            <a href="/download/{{ download_token }}" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-semibold transition shadow-sm flex items-center gap-1.5">
+                📥 Download portfolio.html
+            </a>
+        </div>
+    </div>
 
     <!-- Header / Hero Section -->
     <header class="bg-white border-b border-slate-200 py-16 px-6 text-center shadow-sm">

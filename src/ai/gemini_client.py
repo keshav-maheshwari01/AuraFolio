@@ -3,6 +3,11 @@ import google.generativeai as genai
 from pydantic import BaseModel , Field
 
 from src.config import Config
+import logging ## if pydantic validation gives error user needs to try this again thats why with logging we will enhance this like user dont need to retry its automatically gets load and give the desired output
+
+from pydantic import ValidationError
+
+logger = logging.getLogger(__name__)
 
 class ExperienceItem(BaseModel):
     company: str = Field(description="Name of the company or organization.")
@@ -37,7 +42,7 @@ class GeminiClient  :
             } 
         )
 
-    def parse_resume_to_json(self,resume_text:str)-> ResumeSchema:
+    def parse_resume_to_json(self,resume_text:str,max_retries : int =3 )-> ResumeSchema:
         prompt = f"""
         Analyze the following raw resume text and extract the professional details 
         according to the required schema. Do not invent or hallucinate any information.
@@ -48,10 +53,58 @@ class GeminiClient  :
         {resume_text}
         ----------------
         """
-        try : 
-            response = self.model.generate_content(prompt)
 
-            structured_data = ResumeSchema.model_validate_json(response.text)
-            return structured_data 
-        except Exception as e : 
-            raise RuntimeError(f" Gemini API Error during resume parsing: {str(e)}")    
+        for attempt in range(1,max_retries+1):
+            try : 
+                logger.info(f"Gemini parsing attempt {attempt} of {max_retries}... ")
+
+                response = self.model.generate_content(prompt)
+
+                validated_data = ResumeSchema.model_validate_json(response.text)
+                logger.info("Successfully validated Gemini JSON response against schema")
+                return validated_data
+            
+            except  ValidationError as ve : 
+                logger.warning(f"Validation error on attempt {attempt}: {ve}")
+
+                if attempt == max_retries:
+
+                    logger.error(f"❌ Max retries ({max_retries}) reached. Schema validation failed.")
+
+                    raise RuntimeError(
+                        f"Gemini failed to produce schema-valid JSON after {max_retries} attempts. "
+                        f"Last validation error: {str(ve)}"
+                    )
+
+                prompt = f"""
+                Your previous JSON output failed schema validation. Please correct the errors.
+                
+                ORIGINAL RESUME TEXT:
+                {resume_text}
+                
+                PREVIOUS INVALID JSON OUTPUT:
+                {response.text}
+                
+                PYDANTIC VALIDATION ERROR TO FIX:
+                {str(ve)}
+                
+                INSTRUCTIONS FOR REVISION:
+                - Fix ONLY the validation errors specified above.
+                - Preserve all other valid data.
+                - Do not hallucinate or invent information.
+                - Return ONLY valid JSON (no markdown ticks like ```json, no explanations).
+                - Ensure every required field matches the schema format exactly.
+                """
+            
+            except Exception as e:
+                # Handle unexpected network or API errors
+                logger.error(f"API Exception on attempt {attempt}: {str(e)}")
+                if attempt == max_retries:
+                    raise RuntimeError(f"Gemini API failure after {max_retries} attempts: {str(e)}")
+
+                
+
+    
+
+
+        

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraFolio Studio - AI Resume & Portfolio Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="py-6 px-8 border-b border-slate-800 text-center">
+        <h1 class="text-2xl font-black tracking-wider text-blue-500">✨ AURAFOLIO STUDIO</h1>
+        <p class="text-slate-400 text-sm mt-1">Transform any resume into a professional portfolio using Gemini AI.</p>
+    </header>
+
+    <!-- Main Content / Form -->
+    <main class="max-w-2xl mx-auto px-6 py-12 w-full">
+        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-xl">
+            <h2 class="text-xl font-bold mb-4 text-white">Paste Your Resume Content</h2>
+            
+            <!-- HTML Form sending a POST request to Flask -->
+            <form action="/generate-portfolio" method="POST" class="space-y-6">
+                <div>
+                    <label for="resume_text" class="block text-sm font-medium text-slate-300 mb-2">Resume Plain Text:</label>
+                    <textarea 
+                        name="resume_text" 
+                        id="resume_text" 
+                        rows="10" 
+                        required
+                        placeholder="Paste your resume text here (e.g., John Doe, Software Engineer, Experience...)"
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-blue-500 text-sm font-mono"
+                    ></textarea>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg"
+                >
+                    🚀 Generate Portfolio Preview
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-slate-500 text-xs border-t border-slate-800">
+        <p>Powered by Google Gemini & Python Architecture</p>
+    </footer>
+
+</body>
+</html>
