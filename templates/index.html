@@ -40,7 +40,62 @@
                     🚀 Generate Portfolio Preview
                 </button>
             </form>
+
+
+
+
         </div>
+
+
+
+        <!-- Form supporting file uploads and template selection -->
+            <form action="/preview-custom" method="POST" enctype="multipart/form-data" class="space-y-6">
+                
+                <!-- File Upload Option -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Upload Resume File (.pdf, .docx, .txt):</label>
+                    <input 
+                        type="file" 
+                        name="resume_file" 
+                        accept=".pdf,.docx,.txt"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 text-sm transition"
+                    >
+                </div>
+
+                <div class="text-center text-xs text-slate-500 font-semibold">— OR PASTE TEXT BELOW —</div>
+
+                <!-- Textarea Option -->
+                <div>
+                    <textarea 
+                        name="resume_text" 
+                        id="resume_text" 
+                        rows="5" 
+                        placeholder="Paste text here if you prefer not to upload a file..."
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 focus:outline-none focus:border-blue-500 text-sm font-mono transition"
+                    ></textarea>
+                </div>
+
+                <!-- Template Selector -->
+                <div>
+                    <label for="template_name" class="block text-sm font-medium text-slate-300 mb-2">Select Portfolio Template:</label>
+                    <select 
+                        name="template_name" 
+                        id="template_name"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blue-500 text-sm transition"
+                    >
+                        <option value="modern">Modern Professional (Default)</option>
+                        <option value="minimal">Minimalist Clean</option>
+                        <option value="developer">Developer Dark</option>
+                    </select>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg shadow-blue-600/20"
+                >
+                    🚀 Generate Custom Portfolio
+                </button>
+            </form>
     </main>
 
     <!-- Footer -->

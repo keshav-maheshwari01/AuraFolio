@@ -3,9 +3,9 @@ import os
 
 class PortFolioGenerator : 
     @staticmethod 
-    def render_moder_portfolio(structured_data)->str :    #for preview 
+    def render_portfolio(structured_data)->str :    #for preview 
         try : 
-            return render_template("modern.html",date = structured_data)
+            return render_template("modern.html",data = structured_data)
         except Exception as e  : 
             raise RuntimeError(f"Template rendering error : {e}")
 
