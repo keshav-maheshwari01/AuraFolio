@@ -123,3 +123,84 @@ def generate_json():
     
     
     
+
+@main_bp.route("/ats-checker")
+def ats_checker_page():
+    return render_template("ats_checker_form.html")
+
+@main_bp.route("/ats-analyze",methods=["POST"])
+def ats_analyze():
+    try : 
+        resume_text = ""
+        resume_file = request.files.get("resume_file")
+        if resume_file and resume_file.filename != "":
+            resume_text = ResumeReader.read_resume_stream(resume_file)
+        else : 
+            resume_text = request.form.get("request_text","").strip()
+
+
+
+
+
+        job_description=""
+        job_file = request.files.get("job_file")
+        if job_file and job_file.filename!="":
+            job_description=ResumeReader.read_resume_stream(job_file)
+
+        else :
+            job_description = request.form.get("job_description","").strip()
+
+
+        if not resume_text:
+            return "❌ Error: Please provide a resume (via file upload or text box).", 400
+        if not job_description:
+            return "❌ Error: Please provide a target job description (via file upload or text box).", 400
+
+
+        ai_client = GeminiClient()
+        ats_report = ai_client.analyze_ats_score(resume_text, job_description)
+
+        return render_template("ats_score_results.html",report = ats_report)
+
+    except Exception as e:
+        return f"<h1 style='color: red; text-align: center; margin-top: 50px;'>❌ Error during ATS Analysis: {str(e)}</h1>", 500
+
+
+
+@main_bp.route("/cover-letter")
+def cover_letter_page():
+    return render_template("cover_letter_form.html")
+
+
+@main_bp.route("/cover-letter-generate",methods=["POST"])
+def cover_letter_generate():
+    try :
+
+        resume_text = ""
+        resume_file = request.files.get("resume_file")
+        if resume_file and resume_file.filename != "":
+            resume_text = ResumeReader.read_resume_stream(resume_file)
+        else:
+            resume_text = request.form.get("resume_text", "").strip()
+
+
+
+        job_text = ""
+        job_file = request.files.get("job_file")
+        if job_file and job_file.filename != "":
+            job_text = ResumeReader.read_resume_stream(job_file)
+        else:
+            job_text = request.form.get("job_description", "").strip()
+
+        if not resume_text or not job_text:
+            return "❌ Error: Both Resume and Job Description are required.", 400
+
+
+        ai_client = GeminiClient()
+        letter_data = ai_client.generate_cover_letter(resume_text, job_text)
+        return render_template("cover_letter_results.html", letter=letter_data)
+
+    except Exception as e:
+        return f"<h1 style='color: red; text-align: center; margin-top: 50px;'>❌ Error during Cover Letter Generation: {str(e)}</h1>", 500
+
+

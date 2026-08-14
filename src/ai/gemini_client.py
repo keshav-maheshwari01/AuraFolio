@@ -30,6 +30,23 @@ class ResumeSchema(BaseModel):
 
 
 
+
+
+   
+class ATSScoreSchema(BaseModel):
+    ats_score : int = Field(description="Compatibility score from 0 to 100 based on keyword match, skills, and experience alignment.")
+    matched_keywords : list[str] = Field(description="Keywords, technologies, and skills found in both the resume and job description.")
+    missing_keywords:list[str] = Field(description="Important keywords or tools from the job description that are missing from the resume." )
+    recommendations : list[str] = Field(description="Actionable, specific tips to optimize the resume for this job description.")
+
+
+class CoverLetterSchema(BaseModel):
+    subject_line : str = Field(description = "A compelling, professional email subject line for the job application.")
+    salutation : str = Field(description ="Professional greeting, e.g., 'Dear Hiring Manager,' or 'Dear [Hiring Team],'." )
+    body_paragraphs: list[str] = Field(description="3 to 4 well-structured paragraphs connecting the candidate's resume experience directly to the job description requirements.")
+    sign_off: str = Field(description="Professional closing statement and sign-off, e.g., 'Sincerely, [Candidate Name]'.")
+
+
 class GeminiClient  : 
     def __init__(self) :
         genai.configure(api_key=Config.GEMINI_API_KEY) 
@@ -102,9 +119,113 @@ class GeminiClient  :
                 if attempt == max_retries:
                     raise RuntimeError(f"Gemini API failure after {max_retries} attempts: {str(e)}")
 
+
                 
+    def analyze_ats_score(self,resume_text : str , job_description : str , max_retries :int = 3 ) -> ATSScoreSchema:
+        prompt = f"""
+        You are an advanced Applicant Tracking System (ATS) and professional recruiter bot.
+        Compare the following Resume against the Target Job Description. 
+        Calculate an honest ATS compatibility score from 0 to 100.
+        Identify matched keywords, missing keywords, and provide clear recommendations.
+        Return ONLY valid JSON matching the requested schema.
+
+        RESUME TEXT:
+        ----------------
+        {resume_text}
+        ----------------
+
+        TARGET JOB DESCRIPTION:
+        ----------------
+        {job_description}
+        ----------------
+        """
+
+
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                logger.info(f"🔄 Running ATS analysis (Attempt {attempt}/{max_retries})...")
+                response = self.model.generate_content(prompt,generation_config={"response_mime_type":"application/json","response_schema":ATSScoreSchema})
+                validated_data = ATSScoreSchema.model_validate_json(response.text)
+                
+                logger.info("✅ ATS Analysis complete and validated.")
+                return validated_data
+
+            except ValidationError as ve:
+                logger.warning(f"⚠️ ATS validation warning on attempt {attempt}: {ve}")
+                if attempt == max_retries:
+                    raise RuntimeError(f"ATS Analysis failed validation after {max_retries} attempts: {ve}")
+                
+                prompt = f"""
+                Your previous ATS JSON output failed validation. Please fix the error.
+                RESUME: {resume_text}
+                JOB DESCRIPTION: {job_description}
+                PREVIOUS JSON: {response.text}
+                ERROR: {ve}
+                Return ONLY valid JSON matching ATSScoreSchema.
+                """
+            except Exception as e:
+                logger.error(f"❌ ATS API Error: {e}")
+                if attempt == max_retries:
+                    raise RuntimeError(f"ATS API failure: {str(e)}")
+
+
+def generate_cover_letter(self , resume_text:str , job_description : str , max_retries : int = 3 )-> CoverLetterSchema :
+
+
+    prompt = f"""
+        You are an expert executive career coach and professional writer.
+        Write a compelling, tailored cover letter for a job application by synthesizing 
+        the candidate's Resume with the Target Job Description. 
+        Highlight specific matching skills and achievements. Avoid generic fluff.
+        Return ONLY valid JSON matching the requested CoverLetterSchema.
+
+        RESUME TEXT:
+        ----------------
+        {resume_text}
+        ----------------
+
+        TARGET JOB DESCRIPTION:
+        ----------------
+        {job_description}
+        ----------------
+        """
+    for attempt in range(1,max_retries+1):
+        try : 
+            logger.info(f"🔄 Generating cover letter (Attempt {attempt}/{max_retries})...")
+
+            response = self.model.generate_content(prompt,generation_config = {
+                "response_mime_type" :"application/json" , "response_schema":CoverLetterSchema
+            })
+            validated_data = CoverLetterSchema.model_validate_json(response.text)
+            logger.info("✅ Cover letter successfully generated and validated.")
+            return validated_data
+
+
+
+        except ValidationError as ve:
+                logger.warning(f"⚠️ Cover letter validation warning on attempt {attempt}: {ve}")
+                if attempt == max_retries:
+                    raise RuntimeError(f"Cover letter failed validation after {max_retries} attempts: {ve}")
+                
+                prompt = f"""
+                Your previous cover letter JSON failed validation. Please fix the error.
+                RESUME: {resume_text}
+                JOB DESCRIPTION: {job_description}
+                PREVIOUS JSON: {response.text}
+                ERROR: {ve}
+                Return ONLY valid JSON matching CoverLetterSchema.
+                """
+        except Exception as e:
+            logger.error(f"❌ Cover letter API Error: {e}")
+            if attempt == max_retries:
+                raise RuntimeError(f"Cover letter API failure: {str(e)}")
+
+
+
+
 
     
 
 
-        
+ 

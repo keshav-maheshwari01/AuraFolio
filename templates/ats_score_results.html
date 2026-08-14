@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraFolio - ATS Compatibility Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="py-6 px-8 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-black tracking-wider text-blue-500">✨ AURAFOLIO ATS REPORT</h1>
+            <p class="text-slate-400 text-xs">Recruiter System Analysis Dashboard</p>
+        </div>
+        <a href="/ats-checker" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg transition border border-slate-700">
+            ← Analyze Another Job
+        </a>
+    </header>
+
+    <!-- Results Container -->
+    <main class="max-w-4xl mx-auto px-6 py-10 w-full space-y-8">
+        
+        <!-- Score Card Banner -->
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 text-center md:text-left">
+                <span class="bg-blue-500/10 text-blue-400 text-xs font-bold px-3 py-1 rounded-full border border-blue-500/20 uppercase tracking-widest">Analysis Complete</span>
+                <h2 class="text-3xl font-extrabold text-white">Your ATS Compatibility Score</h2>
+                <p class="text-slate-400 text-sm max-w-lg">This score estimates how well your resume's content aligns with the keywords and expectations of the target job description.</p>
+            </div>
+
+            <!-- Dynamic Score Circle/Badge -->
+            <div class="flex flex-col items-center justify-center bg-slate-950 border-4 {% if report.ats_score >= 80 %}border-emerald-500 text-emerald-400{% elif report.ats_score >= 50 %}border-amber-500 text-amber-400{% else %}border-rose-500 text-rose-400{% endif %} w-36 h-36 rounded-full shadow-inner">
+                <span class="text-4xl font-black">{{ report.ats_score }}</span>
+                <span class="text-[10px] tracking-wider uppercase text-slate-400 font-bold mt-1">Out of 100</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Matched Keywords -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h3 class="font-bold text-emerald-400 flex items-center gap-2">✅ Matched Keywords</h3>
+                    <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">{{ report.matched_keywords | length }} found</span>
+                </div>
+                <div class="flex flex-wrap gap-2 max-h-60 overflow-y-auto pr-2">
+                    {% for keyword in report.matched_keywords %}
+                        <span class="bg-emerald-950/60 text-emerald-300 border border-emerald-800/50 text-xs font-medium px-3 py-1 rounded-lg">
+                            {{ keyword }}
+                        </span>
+                    {% else %}
+                        <p class="text-xs text-slate-500 italic">No significant matching keywords detected.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Missing Keywords -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h3 class="font-bold text-rose-400 flex items-center gap-2">⚠️ Missing Keywords</h3>
+                    <span class="text-xs bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded-full border border-rose-500/20 font-mono">{{ report.missing_keywords | length }} missing</span>
+                </div>
+                <div class="flex flex-wrap gap-2 max-h-60 overflow-y-auto pr-2">
+                    {% for keyword in report.missing_keywords %}
+                        <span class="bg-rose-950/60 text-rose-300 border border-rose-800/50 text-xs font-medium px-3 py-1 rounded-lg">
+                            {{ keyword }}
+                        </span>
+                    {% else %}
+                        <p class="text-xs text-slate-500 italic">Fantastic! No critical keywords are missing.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Actionable Recommendations -->
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl space-y-4">
+            <h3 class="font-bold text-white text-lg border-b border-slate-800 pb-3 flex items-center gap-2">💡 AI Recommendations for Optimization</h3>
+            <ul class="space-y-3">
+                {% for tip in report.recommendations %}
+                    <li class="flex items-start gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm text-slate-300">
+                        <span class="text-blue-500 font-bold">•</span>
+                        <span>{{ tip }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="text-center pt-4">
+            <a href="/" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg">
+                🏠 Return to Main Studio Dashboard
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-slate-600 text-xs border-t border-slate-800">
+        <p>AuraFolio Studio • Real-Time Recruiter Simulator Engine</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraFolio - Your Custom Cover Letter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-indigo-600 selection:text-white">
+
+    <!-- Header Toolbar -->
+    <header class="py-5 px-8 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="text-lg">✨</span>
+            <h1 class="text-sm font-black tracking-wider text-white">YOUR COVER LETTER IS READY</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/cover-letter" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl transition border border-slate-700">
+                ← Generate Another
+            </a>
+            <button onclick="window.print()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl transition shadow-sm">
+                🖨️ Print / Save PDF
+            </button>
+        </div>
+    </header>
+
+    <!-- Document Viewer Container -->
+    <main class="max-w-3xl mx-auto px-6 py-12 w-full">
+        
+        <div class="bg-white text-slate-900 p-10 md:p-14 rounded-2xl shadow-2xl space-y-6 font-serif leading-relaxed relative">
+            
+            <!-- Subject Line Meta box -->
+            <div class="bg-slate-100 border border-slate-200 p-4 rounded-xl font-sans text-xs text-slate-600 space-y-1">
+                <p><strong class="text-slate-900">Recommended Subject:</strong> <span id="subject-text">{{ letter.subject_line }}</span></p>
+            </div>
+
+            <!-- Salutation -->
+            <div class="text-base font-medium pt-4">
+                <p>{{ letter.salutation }}</p>
+            </div>
+
+            <!-- Body Paragraphs -->
+            <div class="space-y-4 text-base text-slate-800">
+                {% for paragraph in letter.body_paragraphs %}
+                    <p>{{ paragraph }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Sign-off -->
+            <div class="text-base pt-4 space-y-2">
+                <p>{{ letter.sign_off }}</p>
+            </div>
+
+        </div>
+
+        <div class="text-center pt-8">
+            <a href="/" class="text-xs text-slate-400 hover:text-white transition">🏠 Return to Main Studio Dashboard</a>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-slate-600 text-xs border-t border-slate-800/80 bg-slate-900/30">
+        <p>AuraFolio Studio • Designed for High-Impact Applications</p>
+    </footer>
+
+</body>
+</html>

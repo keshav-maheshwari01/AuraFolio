@@ -6,101 +6,169 @@
     <title>AuraFolio Studio - AI Resume & Portfolio Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white relative overflow-x-hidden">
+
+    <!-- Ambient background glow elements -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
 
     <!-- Header -->
-    <header class="py-6 px-8 border-b border-slate-800 text-center">
-        <h1 class="text-2xl font-black tracking-wider text-blue-500">✨ AURAFOLIO STUDIO</h1>
-        <p class="text-slate-400 text-sm mt-1">Transform any resume into a professional portfolio using Gemini AI.</p>
+    <header class="py-5 px-8 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50 flex justify-between items-center shadow-lg shadow-slate-950/50">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-md shadow-blue-500/20 font-black text-white text-lg">
+                ✨
+            </div>
+            <div>
+                <h1 class="text-base font-black tracking-wider text-white">AURAFOLIO <span class="text-blue-500">STUDIO</span></h1>
+                <p class="text-slate-400 text-[11px] font-medium">AI Career & Portfolio Engineering</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2.5 bg-slate-800/60 border border-slate-700/50 px-3 py-1.5 rounded-full shadow-inner">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-xs text-slate-300 font-semibold tracking-wide">Gemini AI Online</span>
+        </div>
     </header>
 
-    <!-- Main Content / Form -->
-    <main class="max-w-2xl mx-auto px-6 py-12 w-full">
-        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-xl">
-            <h2 class="text-xl font-bold mb-4 text-white">Paste Your Resume Content</h2>
-            
-            <!-- HTML Form sending a POST request to Flask -->
-            <form action="/generate-portfolio" method="POST" class="space-y-6">
-                <div>
-                    <label for="resume_text" class="block text-sm font-medium text-slate-300 mb-2">Resume Plain Text:</label>
-                    <textarea 
-                        name="resume_text" 
-                        id="resume_text" 
-                        rows="10" 
-                        required
-                        placeholder="Paste your resume text here (e.g., John Doe, Software Engineer, Experience...)"
-                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-200 focus:outline-none focus:border-blue-500 text-sm font-mono"
-                    ></textarea>
-                </div>
-
-                <button 
-                    type="submit" 
-                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-lg"
-                >
-                    🚀 Generate Portfolio Preview
-                </button>
-            </form>
-
-
-
-
+    <!-- Main Studio Dashboard -->
+    <main class="max-w-4xl mx-auto px-6 py-12 w-full relative z-10">
+        <div class="text-center mb-10 space-y-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-wide uppercase">
+                🚀 Next-Gen Resume Builder
+            </div>
+            <h2 class="text-4xl font-extrabold text-white tracking-tight">Turn Your Resume Into Career Assets</h2>
+            <p class="text-slate-400 text-sm max-w-xl mx-auto leading-relaxed">Generate a stunning interactive portfolio website or a 100% ATS-friendly printable resume in seconds using advanced AI synthesis.</p>
         </div>
 
-
-
-        <!-- Form supporting file uploads and template selection -->
-            <form action="/preview-custom" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div class="bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 p-8 md:p-10 rounded-3xl shadow-2xl shadow-blue-950/20 space-y-8 relative">
+            
+            <form action="/generate-portfolio" method="POST" enctype="multipart/form-data" class="space-y-8">
                 
-                <!-- File Upload Option -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Upload Resume File (.pdf, .docx, .txt):</label>
-                    <input 
-                        type="file" 
-                        name="resume_file" 
-                        accept=".pdf,.docx,.txt"
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 text-sm transition"
-                    >
+                <!-- INPUT METHOD TABS -->
+                <div class="space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400">Step 1: Provide Your Master Resume</label>
+                    
+                    <!-- Tab Buttons -->
+                    <div class="grid grid-cols-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 gap-1">
+                        <button type="button" onclick="switchTab('file')" id="tab-file" class="py-3 px-4 text-xs font-bold rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/30 transition-all duration-200 flex items-center justify-center gap-2">
+                            📁 Upload Document
+                        </button>
+                        <button type="button" onclick="switchTab('text')" id="tab-text" class="py-3 px-4 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all duration-200 flex items-center justify-center gap-2">
+                            📝 Paste Plain Text
+                        </button>
+                    </div>
+
+                    <!-- Tab Content: File Upload -->
+                    <div id="content-file" class="pt-2 space-y-2">
+                        <div class="border-2 border-dashed border-slate-800 hover:border-blue-500/50 bg-slate-950/60 rounded-2xl p-6 text-center transition-all duration-200 group">
+                            <input 
+                                type="file" 
+                                name="resume_file" 
+                                accept=".pdf,.docx,.txt"
+                                class="w-full text-slate-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-500 text-sm transition cursor-pointer"
+                            >
+                            <p class="text-[11px] text-slate-500 mt-2">Supports PDF, Word (.docx), or Text files up to 10MB.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Text Paste -->
+                    <div id="content-text" class="hidden pt-2 space-y-2">
+                        <textarea 
+                            name="resume_text" 
+                            rows="7" 
+                            placeholder="Paste your professional experience, education, and skills content here..."
+                            class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-slate-200 focus:outline-none focus:border-blue-500 text-sm font-mono transition shadow-inner"
+                        ></textarea>
+                        <p class="text-[11px] text-slate-500 px-1">Quick-paste mode for immediate raw content processing.</p>
+                    </div>
                 </div>
 
-                <div class="text-center text-xs text-slate-500 font-semibold">— OR PASTE TEXT BELOW —</div>
+                <!-- CONFIGURATION OPTIONS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-800/80">
+                    <div class="space-y-2">
+                        <label for="output_type" class="block text-xs font-bold uppercase tracking-wider text-slate-400">Step 2: Choose Output Format</label>
+                        <select 
+                            name="output_type" 
+                            id="output_type"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-slate-200 focus:outline-none focus:border-blue-500 text-sm transition font-medium shadow-inner"
+                            onchange="toggleTemplateSelector()"
+                        >
+                            <option value="portfolio">🌐 Interactive Portfolio Website</option>
+                            <option value="resume">📄 Printable ATS-Friendly Resume</option>
+                        </select>
+                    </div>
 
-                <!-- Textarea Option -->
-                <div>
-                    <textarea 
-                        name="resume_text" 
-                        id="resume_text" 
-                        rows="5" 
-                        placeholder="Paste text here if you prefer not to upload a file..."
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-slate-200 focus:outline-none focus:border-blue-500 text-sm font-mono transition"
-                    ></textarea>
+                    <div id="template_container" class="space-y-2 transition-all duration-300">
+                        <label for="template_name" class="block text-xs font-bold uppercase tracking-wider text-slate-400">Step 3: Select Design Theme</label>
+                        <select 
+                            name="template_name" 
+                            id="template_name"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-slate-200 focus:outline-none focus:border-blue-500 text-sm transition font-medium shadow-inner"
+                        >
+                            <option value="modern">Modern Professional</option>
+                            <option value="minimal">Minimalist Clean</option>
+                            <option value="developer">Developer Dark</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Template Selector -->
-                <div>
-                    <label for="template_name" class="block text-sm font-medium text-slate-300 mb-2">Select Portfolio Template:</label>
-                    <select 
-                        name="template_name" 
-                        id="template_name"
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blue-500 text-sm transition"
-                    >
-                        <option value="modern">Modern Professional (Default)</option>
-                        <option value="minimal">Minimalist Clean</option>
-                        <option value="developer">Developer Dark</option>
-                    </select>
-                </div>
-
+                <!-- SUBMIT BUTTON -->
                 <button 
                     type="submit" 
-                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg shadow-blue-600/20"
+                    class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold py-4 px-6 rounded-2xl transition-all duration-200 shadow-xl shadow-blue-600/25 flex items-center justify-center gap-2.5 text-base cursor-pointer transform active:scale-[0.99]"
                 >
-                    🚀 Generate Custom Portfolio
+                    <span>⚡ Generate Professional Asset</span>
                 </button>
             </form>
+        </div>
     </main>
 
+    <!-- JavaScript for Dynamic Interactivity -->
+    <script>
+        function switchTab(tab) {
+            const fileContent = document.getElementById('content-file');
+            const textContent = document.getElementById('content-text');
+            const tabFile = document.getElementById('tab-file');
+            const tabText = document.getElementById('tab-text');
+
+            if (tab === 'file') {
+                fileContent.classList.remove('hidden');
+                textContent.classList.add('hidden');
+                tabFile.className = "py-3 px-4 text-xs font-bold rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/30 transition-all duration-200 flex items-center justify-center gap-2";
+                tabText.className = "py-3 px-4 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all duration-200 flex items-center justify-center gap-2";
+            } else {
+                textContent.classList.remove('hidden');
+                fileContent.classList.add('hidden');
+                tabText.className = "py-3 px-4 text-xs font-bold rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/30 transition-all duration-200 flex items-center justify-center gap-2";
+                tabFile.className = "py-3 px-4 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all duration-200 flex items-center justify-center gap-2";
+            }
+        }
+
+        function toggleTemplateSelector() {
+            const outputType = document.getElementById('output_type').value;
+            const templateContainer = document.getElementById('template_container');
+            if (outputType === 'resume') {
+                templateContainer.style.opacity = '0.25';
+                templateContainer.style.pointerEvents = 'none';
+            } else {
+                templateContainer.style.opacity = '1';
+                templateContainer.style.pointerEvents = 'auto';
+            }
+        }
+    </script>
+
     <!-- Footer -->
-    <footer class="text-center py-6 text-slate-500 text-xs border-t border-slate-800">
-        <p>Powered by Google Gemini & Python Architecture</p>
+    <footer class="text-center py-8 text-slate-500 text-xs border-t border-slate-800/80 bg-slate-900/30 space-y-3 relative z-10">
+        <div>
+            <a href="/ats-checker" class="inline-flex items-center gap-1.5 text-xs bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/20 px-4 py-2 rounded-xl transition font-semibold shadow-sm">
+                <span>📊 Try the ATS Score & Keyword Matcher</span>
+                <span>&rarr;</span>
+            </a>
+
+            <a href="/cover-letter" class="inline-flex items-center gap-1.5 text-xs bg-purple-600/10 hover:bg-purple-600/20 text-purple-400 border border-purple-500/20 px-4 py-2 rounded-xl transition font-semibold shadow-sm ml-2">
+    <span>✍️ Try the AI Cover Letter Generator</span>
+    <span>&rarr;</span>
+</a>
+        </div>
+        <p>AuraFolio Studio • Engineered for High-Impact Careers & 100% ATS Compliance</p>
     </footer>
 
 </body>
